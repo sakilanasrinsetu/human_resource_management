@@ -1,6 +1,8 @@
 from django.shortcuts import render
 
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+
+from employee.filters import *
 from .serializers import *
 from utils.custom_veinlet import CustomViewSet
 from employee.models import *
@@ -10,6 +12,8 @@ from django.db.models import Q
 
 from employee.serializers import *
 from utils.response_wrapper import ResponseWrapper
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, viewsets, filters
 
 # Create your views here.
 
@@ -31,6 +35,18 @@ class EmployeeDivisionViewSet(CustomViewSet):
     queryset = EmployeeDivision.objects.all()
     lookup_field = 'slug'
     serializer_class = EmployeeDivisionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
+    filterset_class = EmployeeDivisionFilter
+    
+
+class DepartmentViewSet(CustomViewSet):
+    queryset = Department.objects.all()
+    lookup_field = 'slug'
+    serializer_class = DepartmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
  

@@ -21,4 +21,10 @@ urlpatterns =[
          EmployeeDivisionViewSet.as_view({'delete': 'destroy',
                               "patch":"update", "get":"retrieve"},
                               name='employee_division')),
+    path('employee_department/',
+         DepartmentViewSet.as_view({'get': 'list', 'post': 'create'}, name='employee_department')),
+    path('employee_department/<slug>/',
+         DepartmentViewSet.as_view({'delete': 'destroy',
+                              "patch":"update", "get":"retrieve"},
+                              name='employee_department')),
 ]

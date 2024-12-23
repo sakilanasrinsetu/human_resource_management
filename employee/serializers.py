@@ -16,10 +16,19 @@ class OfficeLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = OfficeLocation
         fields = "__all__"
+        read_only_fields = ['slug', 'created_by', 'updated_by', 'company_owner']
 
 class EmployeeDivisionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EmployeeDivision
         fields = "__all__"
+        read_only_fields = ['slug', 'created_by', 'updated_by', 'company_owner']
+
+class DepartmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Department
+        fields = "__all__"
+        read_only_fields = ['slug', 'created_by', 'updated_by', 'company_owner']
         
