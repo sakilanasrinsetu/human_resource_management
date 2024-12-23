@@ -46,7 +46,7 @@ class EmployeeDivisionViewSet(CustomViewSet):
 class DepartmentViewSet(CustomViewSet):
     queryset = Department.objects.all().order_by('name')
     lookup_field = 'slug'
-    serializer_class = DepartmentSerializer
+    serializer_class = EmployeeDepartmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
  
