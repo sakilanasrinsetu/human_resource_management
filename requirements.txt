@@ -20,3 +20,4 @@ wmi
 psutil
 
 pygraphviz
+drf-extra-fields
