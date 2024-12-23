@@ -44,6 +44,7 @@ schema_urlpatterns = [
 
 url_patterns = [
     path('user_account/', include('user.urls')),
+    path('employee_management/', include('employee.urls')),
     
 ]
 
