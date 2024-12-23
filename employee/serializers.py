@@ -9,7 +9,8 @@ class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = "__all__"
-
+        read_only_fields = ['slug', 'created_by', 'updated_by', 'company_owner']
+        
 class OfficeLocationSerializer(serializers.ModelSerializer):
 
     class Meta:

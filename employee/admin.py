@@ -100,6 +100,14 @@ class BankInformationAdmin(admin.ModelAdmin):
 admin.site.register(BankInformation, BankInformationAdmin)
 
 
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'slug','created_at']
+
+    class Meta:
+        model = Company
+        
+admin.site.register(Company, CompanyAdmin)
+
 class EmployeeInformationAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'name', 'slug', 'employee_id', 'work_station','employee_type','created_at']
     list_filter = ['work_station__name']

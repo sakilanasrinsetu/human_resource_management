@@ -29,4 +29,4 @@
 
 # For Dump Project Data
 
-    `python manage.py dumpdata > hr.json blog`
+    `python manage.py dumpdata > hr.json employee`
