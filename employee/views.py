@@ -18,21 +18,21 @@ from rest_framework import permissions, viewsets, filters
 # Create your views here.
 
 class CompanyViewSet(CustomViewSet):
-    queryset = Company.objects.all()
+    queryset = Company.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = CompanySerializer
     permission_classes = [permissions.IsAuthenticated]
     
 
 class OfficeLocationViewSet(CustomViewSet):
-    queryset = OfficeLocation.objects.all()
+    queryset = OfficeLocation.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = OfficeLocationSerializer
     permission_classes = [permissions.IsAuthenticated]
     
 
 class EmployeeDivisionViewSet(CustomViewSet):
-    queryset = EmployeeDivision.objects.all()
+    queryset = EmployeeDivision.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = EmployeeDivisionSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -44,7 +44,7 @@ class EmployeeDivisionViewSet(CustomViewSet):
     
 
 class DepartmentViewSet(CustomViewSet):
-    queryset = Department.objects.all()
+    queryset = Department.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = DepartmentSerializer
     permission_classes = [permissions.IsAuthenticated]
