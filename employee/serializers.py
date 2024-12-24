@@ -55,7 +55,6 @@ class BaseSerializer(serializers.ModelSerializer):
     
 class OfficeLocationListSerializer(serializers.ModelSerializer): 
     slug = serializers.CharField(read_only = True)
-    office_type_display = serializers.CharField(source='get_office_type_display')
 
     class Meta:
         model = OfficeLocation
@@ -63,9 +62,6 @@ class OfficeLocationListSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'slug',
-            'area',
-            'office_type',
-            'office_type_display',
             'primary_phone',
             'store_no',
             'email',

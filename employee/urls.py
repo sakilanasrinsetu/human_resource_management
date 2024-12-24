@@ -55,5 +55,52 @@ urlpatterns =[
                EmployeeTypeViewSet.as_view({'post': 'create', 'get': 'list'},  name='employee_type')),
      path('employee_type/<id>/',
                EmployeeTypeViewSet.as_view({'patch': 'update', 'get': 'retrieve', 'delete':'destroy'},  name='employee_type')),
+     # Exam Type
+
+     path('exam_type/',
+               ExamTypeViewSet.as_view({'post': 'create', 'get': 'list'},  name='exam_type')),
+     path('exam_type/<slug>/',
+               ExamTypeViewSet.as_view({'patch': 'update', 'get': 'retrieve'},  name='exam_type')),
+
+     # Employee Information
+
+     path('employee_information/',
+               EmployeeInformationViewSet.as_view({'get': 'list'},  name='employee_information')),
+     path('employee_overview_list/',
+               EmployeeInformationViewSet.as_view({'get': 'employee_overview_list'},  name='employee_overview_list')),
+
+     path('employee_information_create/<user_id>/',
+               EmployeeInformationViewSet.as_view({'post': 'create'},  name='employee_information_create')),
+     path('employee_information/<slug>/',
+               EmployeeInformationViewSet.as_view({'patch': 'update', 'get': 'retrieve', 'delete':'destroy'},  name='employee_information')),
+     path('employee_information_summary/',
+               EmployeeInformationViewSet.as_view({'get': 'employee_information_summary'},  name='employee_information_summary')),
+     path('office_wise_employee_list/',
+               EmployeeInformationViewSet.as_view({'get': 'office_wise_employee_list'},  name='office_wise_employee_list')),
+
+     # Employee Guardian Information
+
+
+     path('guardian_information_create/<employee_slug>/',
+               GuardianInformationViewSet.as_view({'patch': 'update'}, name='guardian_information_create')),
+     
+     path('employee_guardian_information/<slug>/',
+               GuardianInformationViewSet.as_view({'get': 'retrieve'},  name='employee_guardian_information')),
+
+     path('employee_address_information/<employee_slug>/',
+               EmployeeAddressInformationViewSet.as_view({'patch': 'update'}, name='employee_address_information')),
+     
+     # path('employee_address_information/<employee_param>/',
+     #         EmployeeAddressInformationViewSet.as_view({'post': 'create', 'get': 'retriveEmployee'}, name='employee_address_information-detail')),
+
+     path('employee_education_information/<employee_slug>/',
+               EmployeeEducationInformationViewSet.as_view({'patch': 'update'}, name='employee_education_information')),
+
+     path('employee_job_experience_information/<employee_slug>/',
+               JobExperienceInformationViewSet.as_view({'patch': 'update'}, name='employee_job_experience_information')),
+
+     path('employee_bank_information/<employee_slug>/',
+               BankInformationViewSet.as_view({'patch': 'update'}, name='employee_bank_information')),
 
 ]
+  
