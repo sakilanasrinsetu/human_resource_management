@@ -209,3 +209,247 @@ class EmployeeDepartmentViewSet(CustomViewSet):
             return ResponseWrapper(error_msg=serializer.errors, error_code=400)
    
  
+class EmployeeDesignationViewSet(CustomViewSet):
+    queryset = Designation.objects.all()
+    lookup_field = ('id', 'slug')
+    serializer_class = EmployeeDesignationSerializer
+    permission_classes = [CheckCustomPermission]
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
+    filterset_class = EmployeeDesignationFilter
+
+    @log_activity
+    def create(self, request, *args, **kwargs): 
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(data=request.data)
+        name = request.data.get('name')
+        qs = Designation.objects.filter(name=name).last()
+        if qs:
+            return ResponseWrapper(error_msg='Employee Division Name Must Be Unique', error_code=400)
+        
+        if serializer.is_valid():
+            departments = serializer.validated_data.pop('departments', None)
+            if departments:
+                department_qs = Department.objects.filter(
+                    slug = departments
+                ).last()
+                if not department_qs:
+                    return ResponseWrapper(error_msg='Department Information is Not Found', error_code=404)
+                
+            serializer.validated_data['created_by'] = self.request.user
+            qs = serializer.save()
+            if department_qs:
+                
+                try:
+                    qs.division_head= department_qs.user
+                except:
+                    pass
+            qs.save()
+
+            return ResponseWrapper(data=serializer.data, msg='created', status=200)
+        else:
+            return ResponseWrapper(error_msg=serializer.errors, error_code=400)
+
+    @log_activity
+    def update(self, request,slug, *args, **kwargs): 
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(data=request.data, partial=True)
+        
+        qs = Designation.objects.filter(slug=slug).last()
+        if not qs:
+            return ResponseWrapper(error_msg='Employee Designation not Found', error_code=404)
+
+        name = request.data.get('name') or qs.name
+        
+        employee_division_qs = Designation.objects.exclude(slug = slug).filter(name=name).last()
+        
+        if employee_division_qs:
+            return ResponseWrapper(error_msg='Employee Designation Name Must Be Unique', error_code=400)
+        
+        if serializer.is_valid():
+            departments = serializer.validated_data.pop('departments', None)
+            
+            if departments:
+                departments_qs = Department.objects.filter(
+                    slug = departments
+                ).last()
+                if not departments_qs:
+                    return ResponseWrapper(error_msg='Employee Department is Not Found', error_code=404)
+
+            serializer.validated_data['updated_by'] = self.request.user
+            qs = serializer.update(instance=qs, validated_data=serializer.validated_data)
+            
+            if departments:
+                qs.division_head= departments_qs
+                qs.save()
+                
+            serializer = EmployeeDesignationSerializer(qs)
+
+            return ResponseWrapper(data=serializer.data, msg='Updated', status=200)
+        else:
+            return ResponseWrapper(error_msg=serializer.errors, error_code=400)
+
+class EmployeeRankingViewSet(CustomViewSet):
+    queryset = Ranking.objects.all()
+    lookup_field = 'pk'
+    serializer_class = EmployeeRankingSerializer
+    permission_classes = [CheckCustomPermission]
+    
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
+    filterset_class = EmployeeRankingFilter
+
+    @log_activity
+    def create(self, request, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(data=request.data)
+        name = request.data.get('name')
+        employee_ranking_qs = Ranking.objects.filter(name =  name).last()
+        if employee_ranking_qs:
+            return ResponseWrapper(error_msg='Employee Ranking Name Must Be Unique', error_code=400)
+        
+        if serializer.is_valid():
+            grade = serializer.validated_data.pop('grade', None)
+            
+            if grade:
+                grade_qs = Grading.objects.filter(
+                    slug = grade
+                ).last()
+                if not grade_qs:
+                    return ResponseWrapper(error_msg='Employee Grading is Not Found', error_code=404)
+                
+            try:
+                qs = serializer.save( 
+                    created_by=self.request.user
+                )
+            except:
+                qs = serializer.save()
+                
+            if grade:
+                qs.grade = grade_qs
+                qs.save()
+
+            # Save Logger for Tracking 
+
+            return ResponseWrapper(data=serializer.data, msg='created', status=200)
+        else:
+            return ResponseWrapper(error_msg=serializer.errors, error_code=400)
+    
+    @log_activity
+    def update(self, request,slug, *args, **kwargs): 
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(data=request.data, partial=True) 
+        
+        qs = Ranking.objects.filter(slug=slug).last()
+        if not qs:
+            return ResponseWrapper(error_msg='Employee Ranking not Found', error_code=404)
+
+        name = request.data.get('name') or qs.name
+        
+        employee_ranking_qs = Ranking.objects.exclude(slug = slug).filter(name=name).last()
+        
+        if employee_ranking_qs:
+            return ResponseWrapper(error_msg='Employee Ranking Name Must Be Unique', error_code=400) 
+        
+        if serializer.is_valid():
+            grade = serializer.validated_data.pop('grade', None)
+            
+            if grade:
+                grade_qs = Grading.objects.filter(
+                    slug = grade
+                ).last()
+                if not grade_qs:
+                    return ResponseWrapper(error_msg='Employee Grading is Not Found', error_code=404)
+                
+            
+            serializer.validated_data['updated_by'] = self.request.user
+            qs = serializer.update(instance=qs, validated_data=serializer.validated_data)
+            
+            if grade:
+                qs.grade = grade_qs
+                qs.save()
+            
+            serializer = EmployeeRankingSerializer(qs)
+
+            return ResponseWrapper(data=serializer.data, msg='Updated', status=200)
+        else:
+            return ResponseWrapper(error_msg=serializer.errors, error_code=400)
+
+
+class EmployeeGradeViewSet(CustomViewSet):
+    queryset = Grading.objects.all()
+    lookup_field = 'pk'
+    serializer_class = EmployeeGradeSerializer
+    permission_classes = [CheckCustomPermission]
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
+    filterset_class = EmployeeGradingFilter
+    
+    @log_activity
+    def create(self, request, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(data=request.data)
+        name = request.data.get('name')
+        employee_grade_qs = Grading.objects.filter(name =  name).last()
+        if employee_grade_qs:
+            return ResponseWrapper(error_msg='Employee Grade Name Must Be Unique', error_code=400)
+        
+        if serializer.is_valid():
+            try:
+                qs = serializer.save( 
+                    created_by=self.request.user
+                )
+            except:
+                qs = serializer.save()
+
+            # Save Logger for Tracking 
+
+            return ResponseWrapper(data=serializer.data, msg='created', status=200)
+        else:
+            return ResponseWrapper(error_msg=serializer.errors, error_code=400)
+
+    @log_activity
+    def update(self, request,slug, *args, **kwargs): 
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(data=request.data, partial=True) 
+        
+        qs = Grading.objects.filter(slug=slug).last()
+        if not qs:
+            return ResponseWrapper(error_msg='Employee Grading not Found', error_code=404)
+
+        name = request.data.get('name') or qs.name
+        
+        employee_grading_qs = Grading.objects.exclude(slug = slug).filter(name=name).last()
+        
+        if employee_grading_qs:
+            return ResponseWrapper(error_msg='Employee Grading Name Must Be Unique', error_code=400) 
+        
+        if serializer.is_valid():
+            
+            serializer.validated_data['updated_by'] = self.request.user
+            qs = serializer.update(instance=qs, validated_data=serializer.validated_data)
+            
+            serializer = EmployeeGradeSerializer(qs)
+
+            return ResponseWrapper(data=serializer.data, msg='Updated', status=200)
+        else:
+            return ResponseWrapper(error_msg=serializer.errors, error_code=400)
+
+class EmployeeTypeViewSet(CustomViewSet):
+    queryset = EmployeeType.objects.all()
+    lookup_field = 'pk'
+    serializer_class = EmployeeTypeSerializer
+    permission_classes = [CheckCustomPermission]
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
+    filterset_class = EmployeeTypeFilter
+        
+ 
