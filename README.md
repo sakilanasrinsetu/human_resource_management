@@ -42,12 +42,16 @@
 
 ---
 
+
+
+<img src="https://github.com/sakilanasrinsetu/human_resource_management/blob/main/static/image/redoc.png?raw=true" width="100%">
+
+
 # Project requirement setup
 
 ```bash
 pip install -r requirements.txt
 ```
-
 
 # Project Run Command
 
@@ -78,3 +82,17 @@ python manage.py dumpdata > hr.json employee
 - **Run Command**: Command to start the Django server.
 - **API URL**: Lists the URL for the main API and Redoc API documentation.
 - **Data Dump**: Command to dump the project's data.
+
+<img src="https://github.com/sakilanasrinsetu/human_resource_management/blob/main/erd.png?raw=true" width="100%">
+
+
+<img src="https://github.com/sakilanasrinsetu/human_resource_management/blob/main/erd.png?raw=true" width="100%">
+
+
+<img src="https://github.com/sakilanasrinsetu/human_resource_management/blob/main/erd.png?raw=true" width="100%">
+
+
+<img src="https://github.com/sakilanasrinsetu/human_resource_management/blob/main/erd.png?raw=true" width="100%">
+
+
+<img src="https://github.com/sakilanasrinsetu/human_resource_management/blob/main/erd.png?raw=true" width="100%">
